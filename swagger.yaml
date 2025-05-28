@@ -1,0 +1,446 @@
+openapi: 3.0.0
+info:
+  title: API Sistema de Apoyo Psicológico
+  version: 1.0.0
+  description: Documentación de la API REST para estudiantes, psicólogos, citas, asistencia, notas y horarios.
+
+servers:
+  - url: http://localhost:3000
+
+  
+
+paths:
+  /api/estudiante/obtener:
+    get:
+      summary: Obtener todos los estudiantes
+      responses:
+        '200':
+          description: Lista de estudiantes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estudiantes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Estudiante'
+
+  /api/estudiante/guardar:
+    post:
+      summary: Crear un nuevo estudiante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Estudiante'
+      responses:
+        '201':
+          description: Estudiante creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Estudiante'
+        '500':
+          description: Error al crear estudiante
+
+  /api/estudiante/actualizar/{id}:
+    put:
+      summary: Actualizar un estudiante existente
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID del estudiante a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                correo:
+                  type: string
+                programa_academico:
+                  type: string
+      responses:
+        '200':
+          description: Estudiante actualizado correctamente
+        '404':
+          description: Estudiante no encontrado
+        '500':
+          description: Error al actualizar estudiante
+
+  /api/estudiante/eliminar/{id}:
+    delete:
+      summary: Eliminar un estudiante
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID del estudiante a eliminar
+      responses:
+        '200':
+          description: Estudiante eliminado correctamente
+        '404':
+          description: Estudiante no encontrado
+        '500':
+          description: Error al eliminar estudiante
+
+  /api/psicologo/obtener:
+    get:
+      summary: Obtener todos los psicólogos
+      responses:
+        '200':
+          description: Lista de psicólogos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  psicologos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Psicologo'
+
+  /api/psicologo/guardar:
+    post:
+      summary: Crear un nuevo psicólogo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Psicologo'
+      responses:
+        '201':
+          description: Psicólogo creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Psicologo'
+        '500':
+          description: Error al crear psicólogo
+
+  /api/psicologo/actualizar/{id}:
+    put:
+      summary: Actualizar un psicólogo existente
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID del psicólogo a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                correo:
+                  type: string
+                especialidad:
+                  type: string
+      responses:
+        '200':
+          description: Psicólogo actualizado correctamente
+        '404':
+          description: Psicólogo no encontrado
+        '500':
+          description: Error al actualizar psicólogo
+
+  /api/psicologo/eliminar/{id}:
+    delete:
+      summary: Eliminar un psicólogo
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID del psicólogo a eliminar
+      responses:
+        '200':
+          description: Psicólogo eliminado correctamente
+        '404':
+          description: Psicólogo no encontrado
+        '500':
+          description: Error al eliminar psicólogo
+
+  /api/cita/obtener:
+    get:
+      summary: Obtener todas las citas con datos de estudiantes y psicólogos
+      responses:
+        '200':
+          description: Lista de citas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  citas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CitaCompleta'
+
+  /api/cita/guardar:
+    post:
+      summary: Crear una nueva cita
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cita'
+      responses:
+        '201':
+          description: Cita creada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  cita_id:
+                    type: integer
+        '500':
+          description: Error al guardar cita
+
+  /api/cita/actualizar/{id}:
+    put:
+      summary: Actualizar una cita existente
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID de la cita a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cita'
+      responses:
+        '200':
+          description: Cita actualizada correctamente
+        '500':
+          description: Error al actualizar cita
+
+  /api/cita/eliminar/{id}:
+    delete:
+      summary: Eliminar una cita
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID de la cita a eliminar
+      responses:
+        '200':
+          description: Cita eliminada correctamente
+        '500':
+          description: Error al eliminar cita
+
+  /api/asistencia/registrar:
+    post:
+      summary: Registrar una asistencia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Asistencia'
+      responses:
+        '201':
+          description: Asistencia registrada exitosamente
+        '500':
+          description: Error al registrar asistencia
+
+  /api/notas/estudiante/{id}:
+    get:
+      summary: Obtener notas de un estudiante
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID del estudiante
+      responses:
+        '200':
+          description: Lista de notas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Nota'
+        '500':
+          description: Error al obtener notas
+
+  /api/notas/{id}:
+    get:
+      summary: Obtener notas por estudiante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del estudiante
+      responses:
+        '200':
+          description: Lista de notas del estudiante
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotaCita'
+        '500':
+          description: Error al obtener notas
+
+  /api/notas:
+    post:
+      summary: Crear una nueva nota
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cita_id
+                - contenido
+              properties:
+                cita_id:
+                  type: integer
+                contenido:
+                  type: string
+      responses:
+        '201':
+          description: Nota creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  nota:
+                    $ref: '#/components/schemas/NotaCita'
+        '400':
+          description: Faltan campos requeridos
+        '500':
+          description: Error al crear la nota
+
+components:
+  schemas:
+    Estudiante:
+      type: object
+      properties:
+        estudiante_id:
+          type: integer
+        nombre:
+          type: string
+        correo:
+          type: string
+        programa_academico:
+          type: string
+
+    Psicologo:
+      type: object
+      properties:
+        psicologo_id:
+          type: integer
+        nombre:
+          type: string
+        correo:
+          type: string
+        especialidad:
+          type: string
+
+    Cita:
+      type: object
+      properties:
+        cita_id:
+          type: integer
+        estudiante_id:
+          type: integer
+        psicologo_id:
+          type: integer
+        fecha:
+          type: string
+          format: date-time
+
+    CitaCompleta:
+      type: object
+      properties:
+        cita_id:
+          type: integer
+        estudiante:
+          $ref: '#/components/schemas/Estudiante'
+        psicologo:
+          $ref: '#/components/schemas/Psicologo'
+        fecha:
+          type: string
+          format: date-time
+
+    Asistencia:
+      type: object
+      properties:
+        asistencia_id:
+          type: integer
+        estudiante_id:
+          type: integer
+        cita_id:
+          type: integer
+        presente:
+          type: boolean
+
+    Nota:
+      type: object
+      properties:
+        nota_id:
+          type: integer
+        cita_id:
+          type: integer
+        contenido:
+          type: string
+        creada_en:
+          type: string
+          format: date-time
+
+    NotaCita:
+      type: object
+      properties:
+        nota_id:
+          type: integer
+        cita_id:
+          type: integer
+        contenido:
+          type: string
+        creada_en:
+          type: string
+          format: date-time
